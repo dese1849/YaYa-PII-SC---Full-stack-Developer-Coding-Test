@@ -1,4 +1,4 @@
-aYa Wallet - Full-Stack Engineer Coding Test
+YaYa Wallet - Full-Stack Engineer Coding Test
 This project implements a transaction monitoring dashboard using the YaYa Wallet API. It allows users to view and search their transactions in a responsive, user-friendly interface.
 ________________________________________
 🚀** Features**
