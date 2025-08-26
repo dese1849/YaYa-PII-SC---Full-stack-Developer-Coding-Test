@@ -27,7 +27,7 @@ ________________________________________
 ________________________________________
 📦 **Installation & Setup**
 1.	Clone this repo:
-    •	git clone https://github.com/your-username/yaya-wallet-dashboard.git
+    •	git clone https://github.com/dese1849/YaYa-PII-SC---Full-stack-Developer-Coding-Test.git
     •	cd yaya-wallet-dashboard
 2.	Install dependencies:
     •	npm install
