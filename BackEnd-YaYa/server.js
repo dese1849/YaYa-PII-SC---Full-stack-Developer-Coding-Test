@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes fo YaYa Wallet Transactions
+// Routes for YaYa Wallet Transactions
 app.use("/transactions", transactionRoutes);
 
 app.listen(PORT, () => {

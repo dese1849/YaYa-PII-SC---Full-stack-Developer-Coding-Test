@@ -4,11 +4,12 @@ import styles from "./Dashboard.module.css";
 
 function Dashboard() {
   const [transactions, setTransactions] = useState([]);
-  const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const currentUser = "yayawalletpi";
+
+  const currentUserAccount = "yayawalletpi";
 
   useEffect(() => {
     fetchTransactions();
@@ -16,26 +17,31 @@ function Dashboard() {
 
   const fetchTransactions = async () => {
     try {
-      setLoading(true);
-      const res = await axios.get("http://localhost:4000/transactions");
-      setTransactions(res.data.data || []);
-    } catch (err) {
-      console.error("Error fetching transactions:", err);
+      setIsLoading(true);
+      const response = await axios.get("http://localhost:4000/transactions");
+      setTransactions(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const filtered = transactions.filter((tx) => {
-    const query = search.toLowerCase();
-    const sender = `${tx.sender?.name || ""} ${
-      tx.sender?.account || ""
+  // Filter transactions by query
+  const filteredTransactions = transactions.filter((transaction) => {
+    const query = searchQuery.toLowerCase();
+
+    const sender = `${transaction.sender?.name || ""} ${
+      transaction.sender?.account || ""
     }`.toLowerCase();
-    const receiver = `${tx.receiver?.name || ""} ${
-      tx.receiver?.account || ""
+
+    const receiver = `${transaction.receiver?.name || ""} ${
+      transaction.receiver?.account || ""
     }`.toLowerCase();
-    const cause = (tx.cause || "").toLowerCase();
-    const id = (tx.id || "").toLowerCase();
+
+    const cause = (transaction.cause || "").toLowerCase();
+    const id = (transaction.id || "").toLowerCase();
+
     return (
       sender.includes(query) ||
       receiver.includes(query) ||
@@ -44,16 +50,17 @@ function Dashboard() {
     );
   });
 
-  const totalPages = Math.ceil(filtered.length / rowsPerPage);
+  // Pagination logic
+  const totalPages = Math.ceil(filteredTransactions.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedTransactions = filtered.slice(
+  const paginatedTransactions = filteredTransactions.slice(
     startIndex,
     startIndex + rowsPerPage
   );
 
-  const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return;
-    setCurrentPage(page);
+  const handlePageChange = (pageNumber) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return;
+    setCurrentPage(pageNumber);
   };
 
   const formatDate = (timestamp) => {
@@ -65,21 +72,23 @@ function Dashboard() {
     <div className={styles.container}>
       <h1 className={styles.heading}>YaYa Wallet Transactions Dashboard</h1>
 
+      {/* Search Input */}
       <div className={styles.searchWrapper}>
         <input
           type="text"
           placeholder="🔍 Search by sender, receiver, cause or ID"
-          value={search}
+          value={searchQuery}
           onChange={(e) => {
-            setSearch(e.target.value);
+            setSearchQuery(e.target.value);
             setCurrentPage(1);
           }}
           className={styles.search}
         />
       </div>
 
+      {/* Table */}
       <div className={styles.tableWrapper}>
-        {loading ? (
+        {isLoading ? (
           <div className={styles.loader}></div>
         ) : (
           <>
@@ -99,29 +108,33 @@ function Dashboard() {
               </thead>
               <tbody>
                 {paginatedTransactions.length > 0 ? (
-                  paginatedTransactions.map((tx, index) => {
-                    const isTopup = tx.is_topup;
+                  paginatedTransactions.map((transaction, index) => {
+                    const isTopup = transaction.is_topup;
                     const isIncoming =
-                      isTopup || tx.receiver?.account === currentUser;
+                      isTopup ||
+                      transaction.receiver?.account === currentUserAccount;
+
                     return (
                       <tr
-                        key={tx.id}
+                        key={transaction.id}
                         className={`${styles.row} ${
                           isIncoming ? styles.incoming : styles.outgoing
                         }`}
                       >
                         <td>{startIndex + index + 1}</td>
-                        <td>{tx.id}</td>
+                        <td>{transaction.id}</td>
                         <td>
-                          {tx.sender?.name} ({tx.sender?.account})
+                          {transaction.sender?.name} (
+                          {transaction.sender?.account})
                         </td>
                         <td>
-                          {tx.receiver?.name} ({tx.receiver?.account})
+                          {transaction.receiver?.name} (
+                          {transaction.receiver?.account})
                         </td>
-                        <td>{tx.amount}</td>
-                        <td>{tx.currency}</td>
-                        <td>{tx.cause}</td>
-                        <td>{formatDate(tx.created_at_time)}</td>
+                        <td>{transaction.amount}</td>
+                        <td>{transaction.currency}</td>
+                        <td>{transaction.cause}</td>
+                        <td>{formatDate(transaction.created_at_time)}</td>
                         <td>
                           <span
                             className={`${styles.badge} ${
@@ -145,7 +158,7 @@ function Dashboard() {
                     <td colSpan="9" className={styles.noData}>
                       {transactions.length === 0
                         ? "No Transactions Available."
-                        : `No Transactions Found for "${search}".`}
+                        : `No Transactions Found for "${searchQuery}".`}
                     </td>
                   </tr>
                 )}
@@ -162,13 +175,15 @@ function Dashboard() {
                   Prev
                 </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
+                  (pageNumber) => (
                     <button
-                      key={page}
-                      className={currentPage === page ? styles.activePage : ""}
-                      onClick={() => handlePageChange(page)}
+                      key={pageNumber}
+                      className={
+                        currentPage === pageNumber ? styles.activePage : ""
+                      }
+                      onClick={() => handlePageChange(pageNumber)}
                     >
-                      {page}
+                      {pageNumber}
                     </button>
                   )
                 )}
