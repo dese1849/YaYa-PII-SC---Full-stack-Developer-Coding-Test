@@ -3,13 +3,13 @@ This project implements a transaction monitoring dashboard using the YaYa Wallet
 ________________________________________
 🚀** Features**
 1. Transaction Table with:
-      o	Transaction ID, Sender, Receiver, Amount, Currency, Cause, Created At
+      o Transaction ID, Sender, Receiver, Amount, Currency, Cause, Created At
 2. Pagination (p query param for page number)
 3. Search by sender name, receiver name, cause, or ID
 4. Incoming/Outgoing Indicators
-      o	Incoming: current user is the receiver
-      o	Outgoing: current user is the sender
-      o	Top-up: sender = receiver → considered incoming
+      o Incoming: current user is the receiver
+      o Outgoing: current user is the sender
+      o Top-up: sender = receiver → considered incoming
 5. Responsive UI (works across devices)
 6. Secure API Handling (keys/secret stored safely in environment variables)
 ________________________________________
