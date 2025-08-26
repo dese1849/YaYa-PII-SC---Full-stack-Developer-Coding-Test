@@ -12,7 +12,7 @@ ________________________________________
       o	Top-up: sender = receiver → considered incoming
 •	Responsive UI (works across devices)
 •	Secure API Handling (keys/secret stored safely in environment variables)
-
+________________________________________
 🛠 **Tech Stack**
 **Frontend**
       •	React.js
@@ -24,6 +24,7 @@ ________________________________________
         •	Axios – External API calls
         •	dotenv – Manage environment variables
         •	cors – Enable frontend-backend communication
+________________________________________
 📦 **Installation & Setup**
 1.	Clone this repo:
     •	git clone https://github.com/your-username/yaya-wallet-dashboard.git
@@ -51,6 +52,7 @@ ________________________________________
     •	API credentials are stored in .env (not hardcoded).
     •   .env is ignored via .gitignore.
     •	 Only minimal required info is exposed to frontend.
+________________________________________
 Assumptions
     •	Authentication guide from YaYa Wallet API was followed.
     •	Current user is predefined in Dhashborad Page (for identifying incoming/outgoing transactions).
